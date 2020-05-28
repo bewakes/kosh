@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "allowJs": true,
+        "strictNullChecks": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "jsx": "react",
+        "baseUrl": "./src",
+        "alwaysStrict": true,
+        "allowUnreachableCode": false,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "lib": [
+            "es2015",
+            "dom.iterable",
+            "es2016.array.include",
+            "es2017.object",
+            "es2019",
+            "dom"
+        ]
+    }
+}
