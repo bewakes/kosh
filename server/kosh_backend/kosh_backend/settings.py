@@ -20,12 +20,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#i=d^2h=opa*d0r48$9$gjf19sjd4@a4c2eq-u)@)ich3+k!=3'
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    '#i=d^2h=opa*d0r48$9$gjf19sjd4@a4c2eq-u)@)ich3+k!=3'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'restframework',
+
+    'transaction'
 ]
 
 MIDDLEWARE = [
@@ -118,3 +125,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# STRINGS
+class STRINGS:
+    class txn:
+        CASH = 'Cash'
+        CHEQUE = 'Cheque'
+        INVESTMENT = 'Investment'
+        RETURN = 'Return'
+        PRINCIPAL = 'Principal'
+        INSTALLMENT = 'Installment'
