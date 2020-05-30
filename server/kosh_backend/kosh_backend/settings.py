@@ -136,3 +136,5 @@ class STRINGS:
         RETURN = 'Return'
         PRINCIPAL = 'Principal'
         INSTALLMENT = 'Installment'
+        LOAN_NORMAL = 'Normal'
+        LOAN_SPECIAL = 'Special'

@@ -43,6 +43,24 @@ class Member(CreatedDateMixin):
     total_collected = models.DecimalField(max_digits=12, decimal_places=2)
     remaining_loan = models.DecimalField(max_digits=12, decimal_places=2)
 
+    def __str__(self):
+        return self.name
+
+
+class Loan(CreatedDateMixin):
+    LOAN_TYPE_NORMAL = 'normal'
+    LOAN_TYPE_SPECIAL = 'special'
+    CHOICES_LOAN_TYPE = (
+        (LOAN_TYPE_NORMAL, STRINGS.txn.LOAN_NORMAL),
+        (LOAN_TYPE_NORMAL, STRINGS.txn.LOAN_SPECIAL),
+    )
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    loan_type = models.CharField(max_length=15, choices=CHOICES_LOAN_TYPE)
+
+    def __str__(self):
+        return f'{self.amount} by {self.member} on {self.created_at}'
+
 
 class LoanTransaction(BaseTransaction):
     TRANSACTION_TYPE_RETURN = 'return'  # loan returned to Kosh
@@ -54,8 +72,11 @@ class LoanTransaction(BaseTransaction):
     )
     transaction_type = models.CharField(max_length=15, CHOICES=CHOICES_TRANASCTION_TYPE)
 
+    def __str__(self):
+        return f'{self.transaction_type} {self.transaction_amount} by {self.member}'
 
-class SavingTransaction(CreatedDateMixin):
+
+class SavingTransaction(BaseTransaction):
     TRANSACTION_TYPE_INSTALLMENT = 'installment'
     TRANSACTION_TYPE_PRINCIPAL = 'principal'
 
@@ -64,3 +85,6 @@ class SavingTransaction(CreatedDateMixin):
         (TRANSACTION_TYPE_PRINCIPAL, STRINGS.txn.PRINCIPAL),
     )
     transaction_type = models.CharField(max_length=15, CHOICES=CHOICES_TRANASCTION_TYPE)
+
+    def __str__(self):
+        return f'{self.transaction_type} {self.transaction_amount} by {self.member}'
