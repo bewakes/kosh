@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'restframework',
+    'rest_framework',
 
     'transaction'
 ]
@@ -111,6 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+LANG = 'en'
 
 TIME_ZONE = 'UTC'
 
@@ -125,16 +126,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
-# STRINGS
-class STRINGS:
-    class txn:
-        CASH = 'Cash'
-        CHEQUE = 'Cheque'
-        INVESTMENT = 'Investment'
-        RETURN = 'Return'
-        PRINCIPAL = 'Principal'
-        INSTALLMENT = 'Installment'
-        LOAN_NORMAL = 'Normal'
-        LOAN_SPECIAL = 'Special'

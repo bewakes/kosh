@@ -22,6 +22,17 @@ services:
       depends_on:
           - db
 
+    client:
+        image: mhart/alpine-node
+        command: sh -c 'yarn install && yarn start'
+        env_file:
+            - ./client/.env
+        volumes:
+            - ./:/code
+        ports:
+            - "5000:5000"
+        working_dir: /code
+
 volumes:
   media:
   postgres-data:
