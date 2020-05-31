@@ -1,19 +1,21 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.auth.models import User
 
 from kosh_backend.translation import STRINGS
 
 
-class CreatedDateMixin(models.Model):
+class CreatedMixin(models.Model):
     """Mixin for created at and modified at."""
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='%(class)s_created_by')
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='%(class)s_modified_by')
 
     class Meta:
         abstract = True
 
 
-class BaseTransaction(CreatedDateMixin):
+class BaseTransaction(CreatedMixin):
     TRANSACTION_METHOD_CASH = 'cash'
     TRANSACTION_METHOD_CHEQUE = 'cheque'
 
@@ -27,30 +29,32 @@ class BaseTransaction(CreatedDateMixin):
     # In general, transaction is made by the member itself, but sometimes might be
     # done by other member on behalf of the actual member
     transaction_by = models.ForeignKey(
-            'member', on_delete=models.SET_NULL,
-            null=True, related_name='%(class)s_transaction_by')
+        'member', on_delete=models.SET_NULL,
+        null=True, related_name='%(class)s_transaction_by')
     transaction_amount = models.DecimalField(max_digits=12, decimal_places=2)
     tranasction_method = models.CharField(max_length=15, choices=CHOICES_TRANSACTION_METHOD)
-    transaction_for = ArrayField(models.DateField())
+    transaction_for_month = models.DateField()  # Although date field only year and month will be used
 
-
-    current_collected_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    current_saving = models.DecimalField(max_digits=12, decimal_places=2)
     current_remaining_loan = models.DecimalField(max_digits=12, decimal_places=2)
+
+    remarks = models.TextField(blank=True)
 
     class Meta:
         abstract = True
 
 
-class Member(CreatedDateMixin):
+class Member(CreatedMixin):
     name = models.CharField(max_length=256)
-    total_collected = models.DecimalField(max_digits=12, decimal_places=2)
+    total_saving = models.DecimalField(max_digits=12, decimal_places=2)
     remaining_loan = models.DecimalField(max_digits=12, decimal_places=2)
+    remarks = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
 
 
-class Loan(CreatedDateMixin):
+class Loan(CreatedMixin):
     LOAN_TYPE_NORMAL = 'normal'
     LOAN_TYPE_SPECIAL = 'special'
     CHOICES_LOAN_TYPE = (
@@ -60,6 +64,8 @@ class Loan(CreatedDateMixin):
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     loan_type = models.CharField(max_length=15, choices=CHOICES_LOAN_TYPE)
+
+    remarks = models.TextField(blank=True)
 
     def __str__(self):
         return f'{self.amount} by {self.member} on {self.created_at}'
@@ -71,7 +77,7 @@ class LoanTransaction(BaseTransaction):
 
     CHOICES_TRANASCTION_TYPE = (
         (TRANSACTION_TYPE_INVEST, STRINGS.INVESTMENT),
-        (TRANSACTION_TYPE_INVEST, STRINGS.RETURN),
+        (TRANSACTION_TYPE_RETURN, STRINGS.RETURN),
     )
     transaction_type = models.CharField(max_length=15, choices=CHOICES_TRANASCTION_TYPE)
 
