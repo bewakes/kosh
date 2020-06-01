@@ -4,6 +4,7 @@
         "allowJs": true,
         "strictNullChecks": true,
         "strict": true,
+        "moduleResolution": "Node",
         "esModuleInterop": true,
         "jsx": "react",
         "baseUrl": "./src",

@@ -27,6 +27,7 @@ const Header = (props: HeaderProps) => {
             <NavbarBrand href="/">{APP_TITLE}</NavbarBrand>
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" />
+                <Nav className="mr-auto" />
                 <Nav className="mr-auto" navbar>
                     {
                     links.map(

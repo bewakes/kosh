@@ -8,12 +8,11 @@ import AppRoute from './components/AppRoute';
 
 import './style.scss';
 
-import Header, { LinkAndTitle } from './components/layout/Header';
+import Header, { LinkAndTitle } from './components/Layout/Header';
 
 const App = () => {
-    const links: LinkAndTitle = [
-        { link: '/about', title: 'About' },
-        { link: '/summary', title: 'Summary' },
+    const links: LinkAndTitle[] = [
+        { link: '/members', title: 'Members' },
     ];
     return (
         <>
