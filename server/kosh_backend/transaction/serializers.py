@@ -71,6 +71,15 @@ class SavingTransactionSerializer(CreatedBySerializerMixin, serializers.ModelSer
 
 
 class MemberSerializer(CreatedBySerializerMixin, serializers.ModelSerializer):
+    loan_transactions = LoanTransactionSerializer(source='loantransaction_member', many=True)
+    saving_transactions = LoanTransactionSerializer(source='savingtransaction_member', many=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.context['request'].query_params.get('_expand'):
+            self.fields.pop('loan_transactions')
+            self.fields.pop('saving_transactions')
+
     class Meta:
         model = Member
         fields = '__all__'
