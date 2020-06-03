@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
 from .serializers import (
     Loan, LoanSerializer,
@@ -24,5 +24,6 @@ class LoanTransactionViewSet(viewsets.ModelViewSet):
 
 
 class MemberViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = MemberSerializer
     queryset = Member.objects.all()

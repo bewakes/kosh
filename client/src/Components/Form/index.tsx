@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import {
     Row, Col,
     Form as BForm, FormGroup,
-    Label, Input, Button,
+    Label, Input as BInput, Button,
 } from 'reactstrap';
 
 
@@ -16,7 +16,7 @@ interface FieldSpecs {
     hidden?: boolean;
 }
 
-interface FormSpecs {
+export interface FormSpecs {
     fields: { [key: string]: FieldSpecs; };
     layout: string[][];
 }
@@ -45,9 +45,13 @@ const Form: React.FC<FormProps> = (props: FormProps) => {
                                             </small>
                                         </Label>
                                         <small className="text-danger">
-                                            {errors[field] && "  Please check the value"}
+                                            {errors[field] && ( errors[field].message || "  Please check the value" )}
                                         </small>
-                                        <Input name={field} innerRef={register({ required: true })} invalid={!!errors[field]}/>
+                                        <BInput
+                                            name={field}
+                                            innerRef={register({ required: !!specs.fields[field].required })}
+                                            invalid={!!errors[field]}
+                                        />
                                     </FormGroup>
                                 </Col>
                             ))

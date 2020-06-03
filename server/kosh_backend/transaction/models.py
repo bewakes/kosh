@@ -46,6 +46,8 @@ class BaseTransaction(CreatedMixin):
 
 class Member(CreatedMixin):
     name = models.CharField(max_length=256)
+    contact = models.CharField(max_length=256)
+    school_role = models.CharField(max_length=256, null=True, blank=True)
     total_saving = models.DecimalField(max_digits=12, decimal_places=2)
     remaining_loan = models.DecimalField(max_digits=12, decimal_places=2)
     remarks = models.TextField(blank=True)

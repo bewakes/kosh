@@ -20,6 +20,9 @@ module.exports = {
             errors: true,
             warnings: true,
         },
+        proxy: {
+        "**": "http://localhost:8888"
+      }
     },
     module: {
         rules: [

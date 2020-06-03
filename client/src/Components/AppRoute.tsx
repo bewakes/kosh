@@ -17,7 +17,7 @@ const AppRoute = () => {
             <Route
                 exact
                 path="/newMember"
-                render={NewMember}
+                render={(props) => (<NewMember {...props} />)}
             />
             <Route
                 exact
