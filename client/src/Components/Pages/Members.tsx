@@ -13,7 +13,8 @@ import { membersUrl } from './consts';
 
 import './style.scss';
 
-interface Member {
+export interface Member {
+    id: number;
     name: string;
     contact: string;
     school_role: string;
@@ -24,17 +25,17 @@ interface Member {
 
 const MemberRenderer = ({ item  }: { item: Member; }) => {
     return (
-        <a href="" className="list-item-link">
+        <Link to={`/members/${item.id}/`} className="list-item-link">
             <div className="list-item-member">
                 <b>{item.name}</b>
                 <small>{item.school_role}</small>
             </div>
-        </a>
+        </Link>
     );
 };
 
 const _Members: React.FC = (props: any) => {
-    const [members, setMembers] = useState<Member>([]);
+    const [members, setMembers] = useState<Member[]>([] as Member[]);
     useEffect(() => {
         requests.get(
             membersUrl,

@@ -4,10 +4,11 @@ import SingleColumn from '../Layout/SingleColumn';
 import Form, { FormSpecs } from '../Form';
 import requests from '../../Utils/requests';
 import { NotificationHOC } from '../../Utils/hocs';
+import { membersUrl } from './consts';
 
 import './style.scss';
 
-const memberFormSpecs: FormSpecs = {
+export const memberFormSpecs: FormSpecs = {
     fields: {
         name: {
             label: "Member Name",
@@ -47,7 +48,6 @@ const memberFormSpecs: FormSpecs = {
     ],
 };
 
-const postUrl = '/api/members/';
 
 const _NewMember: React.FC = (props: any) => {
     const onSuccess = (data: any) => {
@@ -58,7 +58,7 @@ const _NewMember: React.FC = (props: any) => {
         props.setNotification(`Can't add member: ${err.toString()}`, 'error');
     };
     const onSubmit = (data) => {
-        requests.post(postUrl, data, onSuccess, onFailure);
+        requests.post(membersUrl, data, onSuccess, onFailure);
     };
     return (
         <div className="page-content">

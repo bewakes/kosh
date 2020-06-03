@@ -1,0 +1,21 @@
+.summary-blocks {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.summary-item {
+    width: 25%;
+    border: solid 2px #eee;
+    height: 125px;
+    border-radius: 10px;
+    margin: 5px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    h3 {
+        flex-basis: 2;
+    }
+}

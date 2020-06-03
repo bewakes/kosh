@@ -5,6 +5,7 @@ import { Route } from 'react-router-dom';
 import Home from './Pages/Home';
 import NewMember from './Pages/NewMember';
 import Members from './Pages/Members';
+import Member from './Pages/Member';
 
 const AppRoute = () => {
     return (
@@ -22,7 +23,12 @@ const AppRoute = () => {
             <Route
                 exact
                 path="/members"
-                render={Members}
+                render={(props) => (<Members {...props} />)}
+            />
+            <Route
+                exact
+                path="/members/:id/"
+                render={(props) => (<Member {...props} />)}
             />
         </>
     );
