@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Table } from 'reactstrap';
 
 import requests from '../../../Utils/requests';
 import { memberUrl } from '../consts';
@@ -15,10 +16,16 @@ interface MemberProps {
 }
 
 interface Transaction {
+    transaction_for_month: string;
+    transaction_amount: number;
+    transaction_type: string;
+    current_remaining_loan: number;
+    created_at: string;
 }
 
 interface ExtendedMember extends Member {
-    transaction: Transaction[];
+    loan_transactions: Transaction[];
+    saving_transactions: Transaction[];
 }
 
 const MemberSummary = ({ member }) => {
@@ -30,7 +37,7 @@ const MemberSummary = ({ member }) => {
             <div className="summary-blocks">
                 <div className="summary-item">
                     <h3 className="summary-item-child">
-                        .
+                        &nbsp;
                     </h3>
                     <span>{member.school_role || "No role info"}</span>
                 </div>
@@ -42,7 +49,7 @@ const MemberSummary = ({ member }) => {
                 </div>
                 <div className="summary-item">
                     <h3 className="summary-item-child">
-                        NRs. {member.remaining_loan && 100000}
+                        NRs. {member.remaining_loan}
                     </h3>
                     <span>Loan</span>
                 </div>
@@ -51,12 +58,42 @@ const MemberSummary = ({ member }) => {
     );
 };
 
-const MemberTransactions = ({ member }) => {
-    if(!member) { return null; };
+const MemberTransactions = ({ member }: { member: ExtendedMember; }) => {
+    if(!member) { console.warn('....'); return null; };
+    console.warn('in txns', member);
+    const { name, loan_transactions, saving_transactions } = member;
     return (
         <div>
-            <h2>Transactions for <i>{ member && member.name }</i></h2>
+            <h2>Loan Transactions for <i>{ name }</i></h2>
             <hr/>
+            {
+                (loan_transactions && loan_transactions.length > 0 && (
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>Transaction Month</th>
+                                <th>Transaction Amount</th>
+                                <th>Transaction Type</th>
+                                <th>Total Loan</th>
+                                <th>Transaction On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                loan_transactions.map((txn, i: number) => (
+                                    <tr key={i}>
+                                        <td>{txn.transaction_for_month}</td>
+                                        <td>NRs. {txn.transaction_amount}</td>
+                                        <td>{txn.transaction_type}</td>
+                                        <td>NRs. {txn.current_remaining_loan}</td>
+                                        <td>{txn.created_at}</td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </Table>
+                )) || "No loan transactions"
+            }
         </div>
     );
 };
@@ -64,13 +101,11 @@ const MemberTransactions = ({ member }) => {
 const _MemberComponent: React.FC = (props: MemberProps) => {
     const params = useParams();
     const [member, setMember] = useState<ExtendedMember>();
-    console.warn('hereeee');
     useEffect(() => {
-        console.warn('using effect');
         requests.get(
             memberUrl(params.id),
             {'_expand': true },
-            (mem) => { console.warn(mem); setMember(mem); },
+            (mem) => { console.warn('MEMBER', mem); setMember(mem); },
             (err) => { props.setNotification(err.toString(), "error"); },
         );
     }, []);
