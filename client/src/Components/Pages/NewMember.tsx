@@ -3,7 +3,7 @@ import React from 'react';
 import SingleColumn from '../Layout/SingleColumn';
 import Form, { FormSpecs } from '../Form';
 import requests from '../../Utils/requests';
-import { NotificationHOC } from '../../Utils/hocs';
+import { useNotification } from '../../hooks';
 import { membersUrl } from './consts';
 
 import './style.scss';
@@ -50,12 +50,14 @@ export const memberFormSpecs: FormSpecs = {
 
 
 const _NewMember: React.FC = (props: any) => {
+    const { setNotification } = useNotification();
+
     const onSuccess = (data: any) => {
-        props.setNotification('Added member', 'success');
+        setNotification('Added member', 'success');
         props.history.push('/members');
     };
     const onFailure = (err) => {
-        props.setNotification(`Can't add member: ${err.toString()}`, 'error');
+        setNotification(`Can't add member: ${err.toString()}`, 'error');
     };
     const onSubmit = (data) => {
         requests.post(membersUrl, data, onSuccess, onFailure);
@@ -73,4 +75,4 @@ const NewMember = ( props: any) => (
     <SingleColumn Component={_NewMember} offset={2} componentProps={props} />
 );
 
-export default NotificationHOC(NewMember);
+export default NewMember;

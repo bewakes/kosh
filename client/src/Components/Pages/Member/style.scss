@@ -5,7 +5,7 @@
 }
 
 .summary-item {
-    width: 25%;
+    width: 22%;
     border: solid 2px #eee;
     height: 125px;
     border-radius: 10px;
@@ -18,4 +18,20 @@
     h3 {
         flex-basis: 2;
     }
+}
+
+.nav-tab-item {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+button.add-transaction {
+    padding: 0px 4px;
+    line-height: normal;
+    font-size: 1.2rem;
+}
+
+.transaction-form {
+    padding: 15px;
 }

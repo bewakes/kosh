@@ -46,7 +46,7 @@ const _Members: React.FC = (props: any) => {
     }, []);
     return (
         <div className="page-content">
-            <h2> Members &nbsp;
+            <h2 className="row-spaced-children">Members
                 <Link to="/newMember">
                     <Button type="button" color="success">Add New Member</Button>
                 </Link>

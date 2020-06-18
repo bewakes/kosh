@@ -1,0 +1,60 @@
+.notification {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    top: 5px;
+    right: 5px;
+    width: 20vw;
+    padding: 15px;
+    color: white;
+    font-weight: bold;
+    border-radius: 3px;
+    min-height: 50px;
+    z-index: 100;
+    box-shadow: 10px;
+
+    &-persistent {
+        @extend .notification;
+        width: 50vw;
+        left: 25vw;
+        top: 5px;
+
+        .persistent-cross {
+            position: absolute;
+            top: 0px;
+            right: 4px;
+
+            &:hover {
+                cursor: pointer;
+                font-size: 1.1em;;
+            }
+        }
+    }
+}
+
+$successColor: #11A10C;
+$warningColor: #d98f08;
+$errorColor: #ce6559;
+
+.success {
+    background: #A3DBA1;
+    border: solid 2px $successColor;
+    color: $successColor;
+}
+
+.warning {
+    background: #F9DEBF;
+    border: solid 2px $warningColor;
+    color: $warningColor;
+}
+
+.error {
+    background: #ECBABA;
+    border: solid 2px $errorColor;
+    color: $errorColor;
+}
+
+.navbar {
+    box-shadow: 0px 0px 4px #bbb6b6;
+}

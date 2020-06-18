@@ -1,0 +1,32 @@
+#modal-mask {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    background: #333333ee;
+    z-index: 20;
+}
+
+#modal-item {
+    position: absolute;
+    top: 10%;
+    left: 30%;
+    width: 40%;
+    height: 60%;
+    background: white;
+    z-index: 21;
+}
+
+#modal-close-icon {
+    position: absolute;
+    right: 6px;
+    top: 0px;
+    font-size: 1.1em;
+    cursor: pointer;
+    color: #777777;
+
+    &:hover {
+        color: #222222;
+    }
+}

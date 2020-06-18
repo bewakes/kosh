@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Table } from 'reactstrap';
+import { Table, Nav, NavItem, NavLink, TabPane, TabContent, Button } from 'reactstrap';
+import classNames from 'classnames';
 
 import requests from '../../../Utils/requests';
 import { memberUrl } from '../consts';
 import SingleColumn from '../../Layout/SingleColumn';
-import { memberFormSpecs } from '../NewMember';
 import { NotificationHOC } from '../../../Utils/hocs';
-import { Member } from '../Members';
+import Modal from '../../Display/Modal';
+
+import { ExtendedMember, Transaction } from './types';
+import TransactionForm from './TransactionForm';
 
 import './style.scss';
 
@@ -15,59 +18,66 @@ interface MemberProps {
     id: number;
 }
 
-interface Transaction {
-    transaction_for_month: string;
-    transaction_amount: number;
-    transaction_type: string;
-    current_remaining_loan: number;
-    created_at: string;
-}
-
-interface ExtendedMember extends Member {
-    loan_transactions: Transaction[];
-    saving_transactions: Transaction[];
-}
-
-const MemberSummary = ({ member }) => {
+const MemberSummary = ({ member }: { member: ExtendedMember }) => {
+    const [ transactionForm, setTransactionForm ] = useState<"saving" | "loan" | null>(null);
+    const onClose = () => { setTransactionForm(null) };
     if(!member) { return null; };
     return (
         <div>
-            <h2>Member Info for <i>{member && member.name}</i></h2>
+            <h2>{member && member.name}</h2>
+            { transactionForm !== null && (
+                <Modal onClose={() => setTransactionForm(null)}>
+                    <TransactionForm member={member} type={transactionForm} onClose={onClose} />
+                </Modal>
+            )}
             <hr/>
             <div className="summary-blocks">
                 <div className="summary-item">
                     <h3 className="summary-item-child">
-                        &nbsp;
+                    <b>{member.school_role || "No role info"}</b>
                     </h3>
-                    <span>{member.school_role || "No role info"}</span>
+                    <h3>
+                    {member.school_role ? "In School" : null }
+                        </h3>
                 </div>
                 <div className="summary-item">
                     <h3 className="summary-item-child">
-                        NRs. {member.total_saving}
+                        <b>NRs. {member.total_saving}</b>
                     </h3>
-                    <span>Savings</span>
+                    <h3>
+                        Savings &nbsp;
+                        <Button
+                            className="add-transaction" color="primary"
+                            size="sm" onClick={() => setTransactionForm("saving")}
+                        >
+                            <b>+</b>
+                        </Button>
+                    </h3>
                 </div>
                 <div className="summary-item">
                     <h3 className="summary-item-child">
-                        NRs. {member.remaining_loan}
+                        <b>NRs. {member.remaining_loan}</b>
                     </h3>
-                    <span>Loan</span>
+                    <h3>
+                        Loan &nbsp;
+                        <Button
+                            className="add-transaction" color="primary"
+                            size="sm" onClick={() => setTransactionForm("loan")}
+                        >
+                            <b>+</b>
+                        </Button>
+                    </h3>
                 </div>
             </div>
         </div>
     );
 };
 
-const MemberTransactions = ({ member }: { member: ExtendedMember; }) => {
-    if(!member) { console.warn('....'); return null; };
-    console.warn('in txns', member);
-    const { name, loan_transactions, saving_transactions } = member;
+const MemberTransactions = ({ transactions }: { transactions: Transaction[] }) => {
     return (
         <div>
-            <h2>Loan Transactions for <i>{ name }</i></h2>
-            <hr/>
             {
-                (loan_transactions && loan_transactions.length > 0 && (
+                (transactions && transactions.length > 0 && (
                     <Table>
                         <thead>
                             <tr>
@@ -80,7 +90,7 @@ const MemberTransactions = ({ member }: { member: ExtendedMember; }) => {
                         </thead>
                         <tbody>
                             {
-                                loan_transactions.map((txn, i: number) => (
+                                transactions.map((txn, i: number) => (
                                     <tr key={i}>
                                         <td>{txn.transaction_for_month}</td>
                                         <td>NRs. {txn.transaction_amount}</td>
@@ -92,31 +102,59 @@ const MemberTransactions = ({ member }: { member: ExtendedMember; }) => {
                             }
                         </tbody>
                     </Table>
-                )) || "No loan transactions"
+                )) || (<small>No transactions</small>)
             }
         </div>
     );
 };
 
-const _MemberComponent: React.FC = (props: MemberProps) => {
+const _MemberComponent: React.FC<MemberProps> = (props) => {
     const params = useParams();
     const [member, setMember] = useState<ExtendedMember>();
+    const [activeTab, setActiveTab] = useState('1');
+    const toggle = (id: string) => (activeTab !== id) && setActiveTab(id);
+
     useEffect(() => {
         requests.get(
             memberUrl(params.id),
             {'_expand': true },
-            (mem) => { console.warn('MEMBER', mem); setMember(mem); },
+            (mem) => { setMember(mem); },
             (err) => { props.setNotification(err.toString(), "error"); },
         );
     }, []);
 
-    return (
+    return member ? (
         <div className="page-content">
             <MemberSummary member={member} />
             <br />
-            <MemberTransactions member={member} />
+            <Nav tabs>
+                <NavItem className="nav-tab-item">
+                    <NavLink
+                        className={classNames({active: activeTab === '1'})}
+                        onClick={() => toggle('1')}
+                    >
+                        Saving Transactions
+                    </NavLink>
+                </NavItem>
+                <NavItem className="nav-tab-item">
+                    <NavLink
+                        className={classNames({active: activeTab === '2'})}
+                        onClick={() => toggle('2')}
+                    >
+                        Loan Transactions
+                    </NavLink>
+                </NavItem>
+            </Nav>
+            <TabContent activeTab={activeTab}>
+                <TabPane tabId="1">
+                    <MemberTransactions transactions={member.saving_transactions} />
+                </TabPane>
+                <TabPane tabId="2">
+                    <MemberTransactions transactions={member.loan_transactions} />
+                </TabPane>
+            </TabContent>
         </div>
-    );
+    ) : null;
 };
 
 const MemberComponent: React.FC = (props: MemberProps) => (
