@@ -24,6 +24,6 @@ class LoanTransactionViewSet(viewsets.ModelViewSet):
 
 
 class MemberViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = MemberSerializer
     queryset = Member.objects.all()

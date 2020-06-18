@@ -6,7 +6,7 @@ import {
 
 interface SingleColumnProps {
     offset: number;
-    Component: React.FC;
+    Component: React.FC<any>;
     componentProps: any;
 };
 

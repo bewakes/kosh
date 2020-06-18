@@ -32,7 +32,7 @@ class BaseTransaction(CreatedMixin):
         'member', on_delete=models.SET_NULL,
         null=True, related_name='%(class)s_transaction_by')
     transaction_amount = models.DecimalField(max_digits=12, decimal_places=2)
-    tranasction_method = models.CharField(max_length=15, choices=CHOICES_TRANSACTION_METHOD)
+    transaction_method = models.CharField(max_length=15, choices=CHOICES_TRANSACTION_METHOD)
     transaction_for_month = models.DateField()  # Although date field only year and month will be used
 
     current_saving = models.DecimalField(max_digits=12, decimal_places=2)
@@ -51,6 +51,7 @@ class Member(CreatedMixin):
     total_saving = models.DecimalField(max_digits=12, decimal_places=2)
     remaining_loan = models.DecimalField(max_digits=12, decimal_places=2)
     remarks = models.TextField(blank=True)
+    # member_since = models.DateField(null=True)
 
     def __str__(self):
         return self.name

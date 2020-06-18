@@ -53,7 +53,7 @@ const _NewMember: React.FC = (props: any) => {
     const { setNotification } = useNotification();
 
     const onSuccess = (data: any) => {
-        setNotification('Added member', 'success');
+        setNotification('Member Successfully Added', 'success');
         props.history.push('/members');
     };
     const onFailure = (err) => {

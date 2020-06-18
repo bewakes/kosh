@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom';
 import { Table, Nav, NavItem, NavLink, TabPane, TabContent, Button } from 'reactstrap';
 import classNames from 'classnames';
 
+import { useNotification } from '../../../hooks';
 import requests from '../../../Utils/requests';
 import { memberUrl } from '../consts';
 import SingleColumn from '../../Layout/SingleColumn';
-import { NotificationHOC } from '../../../Utils/hocs';
 import Modal from '../../Display/Modal';
 
 import { ExtendedMember, Transaction } from './types';
@@ -109,20 +109,21 @@ const MemberTransactions = ({ transactions }: { transactions: Transaction[] }) =
 };
 
 const _MemberComponent: React.FC<MemberProps> = (props) => {
-    const params = useParams();
+    const { setNotification } = useNotification();
+    const params = useParams<{id: any}>();
     const [member, setMember] = useState<ExtendedMember>();
     const [activeTab, setActiveTab] = useState('1');
     const toggle = (id: string) => (activeTab !== id) && setActiveTab(id);
 
     useEffect(() => {
+        if(!params.id) return;
         requests.get(
             memberUrl(params.id),
             {'_expand': true },
             (mem) => { setMember(mem); },
-            (err) => { props.setNotification(err.toString(), "error"); },
+            (err) => { setNotification(err.toString(), "error"); },
         );
     }, []);
-
     return member ? (
         <div className="page-content">
             <MemberSummary member={member} />
@@ -147,7 +148,7 @@ const _MemberComponent: React.FC<MemberProps> = (props) => {
             </Nav>
             <TabContent activeTab={activeTab}>
                 <TabPane tabId="1">
-                    <MemberTransactions transactions={member.saving_transactions} />
+                    <MemberTransactions transactions={member.saving_transactions}/>
                 </TabPane>
                 <TabPane tabId="2">
                     <MemberTransactions transactions={member.loan_transactions} />
@@ -157,8 +158,8 @@ const _MemberComponent: React.FC<MemberProps> = (props) => {
     ) : null;
 };
 
-const MemberComponent: React.FC = (props: MemberProps) => (
-    <SingleColumn Component={NotificationHOC(_MemberComponent)} offset={2} componentProps={props} />
+const MemberComponent: React.FC<MemberProps> = (props) => (
+    <SingleColumn Component={_MemberComponent} offset={2} componentProps={props} />
 );
 
 export default MemberComponent;
