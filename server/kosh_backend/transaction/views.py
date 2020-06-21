@@ -1,10 +1,11 @@
-from rest_framework import viewsets, permissions
+from django.db.models import Count, Sum
+from rest_framework import viewsets, permissions, response
 
 from .serializers import (
     Loan, LoanSerializer,
     LoanTransaction, LoanTransactionSerializer,
     SavingTransaction, SavingTransactionSerializer,
-    Member, MemberSerializer,
+    Member, MemberSerializer, SummarySerializer
 )
 
 
@@ -27,3 +28,13 @@ class MemberViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticated]
     serializer_class = MemberSerializer
     queryset = Member.objects.all()
+
+
+class SummaryViewSet(viewsets.ViewSet):
+    def list(self, *args, **kwargs):
+        summary = Member.objects.all().aggregate(
+            total_members=Count('id'),
+            total_collected=Sum('total_saving'),
+            total_loan=Sum('remaining_loan'),
+        )
+        return response.Response(SummarySerializer(summary).data)

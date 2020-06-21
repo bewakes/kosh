@@ -16,7 +16,7 @@ const AppRoute = () => {
             <Route
                 exact
                 path="/"
-                render={Home}
+                render={(props) => (<Home {...props} />)}
             />
             <Route
                 exact

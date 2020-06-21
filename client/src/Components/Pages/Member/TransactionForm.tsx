@@ -11,9 +11,8 @@ interface FormProps {
     member: Member;
     type: "loan" | "saving";
     onClose?: () => void;
+    formAction: () => void;
 }
-
-const toKeyLabel = (key, label) => ({key, label});
 
 const transactionSpecs: (member: Member, a: string) => FormSpecs = (member, type) => ({
     fields: {
@@ -44,7 +43,7 @@ const transactionSpecs: (member: Member, a: string) => FormSpecs = (member, type
                 type === 'loan'
                 ? [['return', 'Return'], ['invest', 'Invest']]
                 : [['installment', 'Installment'], ['principal', 'Principal']]
-            ).map(([a, b]) => toKeyLabel(a, b))
+            ).map(([key, label]) => ({key, label}))
         },
         remarks: {
             label: "Remarks",
@@ -61,11 +60,12 @@ const transactionSpecs: (member: Member, a: string) => FormSpecs = (member, type
 
 const TransactionForm: React.FC<FormProps> = (props) => {
     console.warn(props);
-    const { type, onClose, member } = props;
+    const { type, onClose, member, formAction } = props;
     const { setNotification } = useNotification();
 
     const onSuccess = () => {
         setNotification("Tranasction added successfully", "success");
+        formAction();
         onClose && onClose();
     };
     const onFailure = (err: any) => {

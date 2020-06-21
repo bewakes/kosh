@@ -5,6 +5,7 @@ export interface Transaction {
     transaction_amount: number;
     transaction_type: string;
     current_remaining_loan: number;
+    current_saving: number;
     created_at: string;
 }
 

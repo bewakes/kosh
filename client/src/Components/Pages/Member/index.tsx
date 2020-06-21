@@ -18,7 +18,13 @@ interface MemberProps {
     id: number;
 }
 
-const MemberSummary = ({ member }: { member: ExtendedMember }) => {
+type SummaryProps = {
+    member: ExtendedMember;
+    formAction: () => void;
+};
+
+const MemberSummary = (props: SummaryProps) => {
+    const { member, formAction } = props;
     const [ transactionForm, setTransactionForm ] = useState<"saving" | "loan" | null>(null);
     const onClose = () => { setTransactionForm(null) };
     if(!member) { return null; };
@@ -27,7 +33,7 @@ const MemberSummary = ({ member }: { member: ExtendedMember }) => {
             <h2>{member && member.name}</h2>
             { transactionForm !== null && (
                 <Modal onClose={() => setTransactionForm(null)}>
-                    <TransactionForm member={member} type={transactionForm} onClose={onClose} />
+                    <TransactionForm formAction={formAction} member={member} type={transactionForm} onClose={onClose} />
                 </Modal>
             )}
             <hr/>
@@ -37,7 +43,7 @@ const MemberSummary = ({ member }: { member: ExtendedMember }) => {
                     <b>{member.school_role || "No role info"}</b>
                     </h3>
                     <h3>
-                    {member.school_role ? "In School" : null }
+                    {member.school_role ? "School Role" : null }
                         </h3>
                 </div>
                 <div className="summary-item">
@@ -45,7 +51,7 @@ const MemberSummary = ({ member }: { member: ExtendedMember }) => {
                         <b>NRs. {member.total_saving}</b>
                     </h3>
                     <h3>
-                        Savings &nbsp;
+                        Savings&nbsp;
                         <Button
                             className="add-transaction" color="primary"
                             size="sm" onClick={() => setTransactionForm("saving")}
@@ -59,7 +65,7 @@ const MemberSummary = ({ member }: { member: ExtendedMember }) => {
                         <b>NRs. {member.remaining_loan}</b>
                     </h3>
                     <h3>
-                        Loan &nbsp;
+                        Loan&nbsp;
                         <Button
                             className="add-transaction" color="primary"
                             size="sm" onClick={() => setTransactionForm("loan")}
@@ -73,7 +79,8 @@ const MemberSummary = ({ member }: { member: ExtendedMember }) => {
     );
 };
 
-const MemberTransactions = ({ transactions }: { transactions: Transaction[] }) => {
+const MemberTransactions = ({ transactions, type }: { transactions: Transaction[]; type: "saving" | "loan"; }) => {
+    const totalDisplay = type === "saving" ? "Saving": "Loan";
     return (
         <div>
             {
@@ -84,7 +91,7 @@ const MemberTransactions = ({ transactions }: { transactions: Transaction[] }) =
                                 <th>Transaction Month</th>
                                 <th>Transaction Amount</th>
                                 <th>Transaction Type</th>
-                                <th>Total Loan</th>
+                                <th>Total {totalDisplay}</th>
                                 <th>Transaction On</th>
                             </tr>
                         </thead>
@@ -95,8 +102,8 @@ const MemberTransactions = ({ transactions }: { transactions: Transaction[] }) =
                                         <td>{txn.transaction_for_month}</td>
                                         <td>NRs. {txn.transaction_amount}</td>
                                         <td>{txn.transaction_type}</td>
-                                        <td>NRs. {txn.current_remaining_loan}</td>
-                                        <td>{txn.created_at}</td>
+                                        <td>NRs. {type === "saving" ? txn.current_saving : txn.current_remaining_loan}</td>
+                                        <td>{new Date(txn.created_at).toDateString()}</td>
                                     </tr>
                                 ))
                             }
@@ -115,18 +122,22 @@ const _MemberComponent: React.FC<MemberProps> = (props) => {
     const [activeTab, setActiveTab] = useState('1');
     const toggle = (id: string) => (activeTab !== id) && setActiveTab(id);
 
-    useEffect(() => {
-        if(!params.id) return;
+    const retrieveMember = () => {
         requests.get(
             memberUrl(params.id),
             {'_expand': true },
             (mem) => { setMember(mem); },
             (err) => { setNotification(err.toString(), "error"); },
         );
+    };
+
+    useEffect(() => {
+        if(!params.id) return;
+        retrieveMember();
     }, []);
     return member ? (
         <div className="page-content">
-            <MemberSummary member={member} />
+            <MemberSummary member={member} formAction={retrieveMember}/>
             <br />
             <Nav tabs>
                 <NavItem className="nav-tab-item">
@@ -148,10 +159,10 @@ const _MemberComponent: React.FC<MemberProps> = (props) => {
             </Nav>
             <TabContent activeTab={activeTab}>
                 <TabPane tabId="1">
-                    <MemberTransactions transactions={member.saving_transactions}/>
+                    <MemberTransactions transactions={member.saving_transactions} type="saving"/>
                 </TabPane>
                 <TabPane tabId="2">
-                    <MemberTransactions transactions={member.loan_transactions} />
+                    <MemberTransactions transactions={member.loan_transactions} type="loan"/>
                 </TabPane>
             </TabContent>
         </div>

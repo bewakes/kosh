@@ -24,7 +24,7 @@ const Header = (props: HeaderProps) => {
     const isOpen = true;
     return (
         <Navbar color="white" light expand="md" className="navbar">
-            <NavbarBrand href="/">{APP_TITLE}</NavbarBrand>
+            <NavbarBrand tag={Link} to="/">{APP_TITLE}</NavbarBrand>
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" />
                 <Nav className="mr-auto" />

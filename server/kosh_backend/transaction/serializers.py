@@ -39,13 +39,13 @@ class LoanTransactionSerializer(CreatedBySerializerMixin, serializers.ModelSeria
 
     def create(self, data):
         member = data['member']
-        data['current_remaining_loan'] = member.remaining_loan
-        data['current_saving'] = member.total_saving
         if data['transaction_type'] == LoanTransaction.TRANSACTION_TYPE_RETURN:
             member.remaining_loan -= data['transaction_amount']
         elif data['transaction_type'] == LoanTransaction.TRANSACTION_TYPE_INVEST:
             member.remaining_loan += data['transaction_amount']
         member.save()
+        data['current_remaining_loan'] = member.remaining_loan
+        data['current_saving'] = member.total_saving
         return super().create(data)
 
 
@@ -60,13 +60,13 @@ class SavingTransactionSerializer(CreatedBySerializerMixin, serializers.ModelSer
 
     def create(self, data):
         member = data['member']
-        data['current_remaining_loan'] = member.remaining_loan
-        data['current_saving'] = member.total_saving
         if data['transaction_type'] == SavingTransaction.TRANSACTION_TYPE_PRINCIPAL:
             member.total_saving += data['transaction_amount']
         elif data['transaction_type'] == SavingTransaction.TRANSACTION_TYPE_INSTALLMENT:
             member.total_saving += data['transaction_amount']
         member.save()
+        data['current_remaining_loan'] = member.remaining_loan
+        data['current_saving'] = member.total_saving
         return super().create(data)
 
 
@@ -84,3 +84,9 @@ class MemberSerializer(CreatedBySerializerMixin, serializers.ModelSerializer):
         model = Member
         fields = '__all__'
         read_only_fields = ('created_at', 'modified_at', 'created_by', 'modified_by')
+
+
+class SummarySerializer(serializers.Serializer):
+    total_members = serializers.IntegerField()
+    total_collected = serializers.IntegerField()
+    total_loan = serializers.IntegerField()

@@ -23,6 +23,7 @@ from transaction.views import (
     LoanTransactionViewSet,
     SavingTransactionViewSet,
     MemberViewSet,
+    SummaryViewSet,
 )
 
 
@@ -32,6 +33,7 @@ router.register('loans', LoanViewSet)
 router.register('members', MemberViewSet)
 router.register('loan-transactions', LoanTransactionViewSet)
 router.register('saving-transactions', SavingTransactionViewSet)
+router.register('summary', SummaryViewSet, basename='summary')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
