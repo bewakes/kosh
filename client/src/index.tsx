@@ -9,7 +9,6 @@ import AppRoute from './Components/AppRoute';
 
 import './style.scss';
 
-import Header, { LinkAndTitle } from './Components/Layout/Header';
 
 interface Notification {
     message: string;
@@ -26,12 +25,8 @@ const App = () => {
         setTimeout(setShowNotification, 3000, false);
     };
 
-    const links: LinkAndTitle[] = [
-        { link: '/members', title: 'Members' },
-    ];
     return (
         <NotificationContext.Provider value={setNotification}>
-            <Header links={links} />
             <AppRoute />
             {
                 showNotification && notificationObj ? (

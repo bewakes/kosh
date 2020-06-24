@@ -13,3 +13,7 @@ export const getCookie = (name: string): string | null => {
     }
     return cookieValue;
 }
+
+export const isLoggedIn = () => {
+    return localStorage.getItem('logged_in') === "true";
+}

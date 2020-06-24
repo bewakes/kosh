@@ -1,10 +1,13 @@
 import React from 'react';
-
-import { Link } from 'react-router-dom';
-
+import { withRouter, Link } from 'react-router-dom';
 import {
     Navbar, NavbarBrand, Nav, NavItem, NavLink, Collapse, NavbarText,
+    Button,
 } from 'reactstrap';
+
+import { useNotification } from '../../../hooks';
+import { logoutUrl } from '../../Pages/consts';
+import requests from '../../../Utils/requests';
 
 import './style.scss';
 
@@ -19,12 +22,24 @@ interface HeaderProps {
     links:  LinkAndTitle[];
 }
 
-const Header = (props: HeaderProps) => {
+const Header: React.FC<HeaderProps> = (props) => {
     const { links } = props;
+    const { setNotification } = useNotification();
     const isOpen = true;
+    const userinfo = JSON.parse(window.localStorage.getItem("userinfo") || "{}");
+    const logout = () => {
+        requests.post(
+            logoutUrl,
+            {},
+            () => { localStorage.clear(); props.history.push("/"); },
+            () => setNotification("Could not logout", "warning")
+        );
+    };
+    console.warn(userinfo);
+    const displayName = (userinfo.name && userinfo.name.trim() !== '' && userinfo.name) || userinfo.username;
     return (
         <Navbar color="white" light expand="md" className="navbar">
-            <NavbarBrand tag={Link} to="/">{APP_TITLE}</NavbarBrand>
+            <NavbarBrand tag={Link} to="/"><b>{APP_TITLE}</b></NavbarBrand>
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" />
                 <Nav className="mr-auto" />
@@ -39,11 +54,12 @@ const Header = (props: HeaderProps) => {
                     }
                 </Nav>
                 <NavbarText>
-                    <b>Hi User !!</b>
+                    <b>{ displayName } </b>
+                        <Button size="sm" color="danger" onClick={logout}>Logout</Button>
                 </NavbarText>
             </Collapse>
         </Navbar>
     );
 };
 
-export default Header;
+export default withRouter(Header);

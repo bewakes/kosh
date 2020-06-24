@@ -18,7 +18,7 @@ interface BaseFieldSpecs {
 type NonEmptyArray<T> = [T, ...T[]]
 
 interface NormalFieldSpecs extends BaseFieldSpecs {
-    type: "string" | "number" | "date" | "text";
+    type: "string" | "number" | "date" | "text" | "password";
 }
 
 interface SelectFieldSpecs extends BaseFieldSpecs {
@@ -37,6 +37,7 @@ export interface FormSpecs {
 interface FormProps {
     specs: FormSpecs;
     onSubmit: (formData: any) => void;
+    submitText?: string;
 }
 
 const FormInput: React.FC<{ specs: FieldSpecs, name: string; register: any, errors: {[key: string]: any; }}>  = (props) => {
@@ -63,7 +64,7 @@ const FormInput: React.FC<{ specs: FieldSpecs, name: string; register: any, erro
         );
     };
 
-    const getInput = (type: "text" | "date" | "number" | "textarea") => (
+    const getInput = (type: "text" | "date" | "number" | "textarea" | "password") => (
         <BInput type={type}
             name={name}
             innerRef={register({ required: !!required })}
@@ -77,6 +78,8 @@ const FormInput: React.FC<{ specs: FieldSpecs, name: string; register: any, erro
         return inputFrame(labelElem, getInput("date"));
     } else if (type === "number") {
         return inputFrame(labelElem, getInput("number"));
+    } else if (type === "password") {
+        return inputFrame(labelElem, getInput("password"));
     } else if (type === "select") {
         const validation = {
             required: !!required,
@@ -103,7 +106,7 @@ const FormInput: React.FC<{ specs: FieldSpecs, name: string; register: any, erro
 };
 
 const Form: React.FC<FormProps> = (props: FormProps) => {
-    const { specs, onSubmit } = props;
+    const { specs, onSubmit, submitText="Submit" } = props;
     const { register, handleSubmit, errors } = useForm({
         defaultValues: specs.defaults
     });
@@ -127,7 +130,7 @@ const Form: React.FC<FormProps> = (props: FormProps) => {
                     </Row>
                 ))
             }
-            <Button type="submit" color="primary">Submit</Button>
+            <Button type="submit" color="primary">{submitText}</Button>
         </BForm>
     );
 };

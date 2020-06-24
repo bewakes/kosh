@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SingleColumn from '../Layout/SingleColumn';
+import { wrapInsideSingleColumn }from '../Layout/SingleColumn';
 import Form, { FormSpecs } from '../Form';
 import requests from '../../Utils/requests';
 import { useNotification } from '../../hooks';
@@ -49,7 +49,7 @@ export const memberFormSpecs: FormSpecs = {
 };
 
 
-const _NewMember: React.FC = (props: any) => {
+const NewMember: React.FC = (props: any) => {
     const { setNotification } = useNotification();
 
     const onSuccess = (data: any) => {
@@ -71,8 +71,4 @@ const _NewMember: React.FC = (props: any) => {
     );
 };
 
-const NewMember = ( props: any) => (
-    <SingleColumn Component={_NewMember} offset={2} componentProps={props} />
-);
-
-export default NewMember;
+export default wrapInsideSingleColumn(NewMember, 3);

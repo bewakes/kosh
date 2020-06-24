@@ -10,6 +10,10 @@ interface SingleColumnProps {
     componentProps: any;
 };
 
+export const wrapInsideSingleColumn = (Component: any, offset: number) => (props: any) => (
+    <SingleColumn Component={Component} offset={offset} componentProps={props} />
+);
+
 const SingleColumn = (props: SingleColumnProps) => {
     const { Component, offset=1, componentProps } = props;
     const clippedOffset = Math.min(5, Math.max(0, offset));
