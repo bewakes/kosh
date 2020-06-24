@@ -16,9 +16,14 @@ class CreatedBySerializerMixin:
 
 
 class UserSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    def get_name(self, obj):
+        return f'{obj.first_name} {obj.last_name}'
+
     class Meta:
         model = User
-        fields = ('username', 'email', 'firstname', 'lastname')
+        fields = ('username', 'email', 'first_name', 'last_name', 'name')
 
 
 class LoanSerializer(CreatedBySerializerMixin, serializers.ModelSerializer):

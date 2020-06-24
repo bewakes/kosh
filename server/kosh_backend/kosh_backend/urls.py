@@ -24,6 +24,9 @@ from transaction.views import (
     SavingTransactionViewSet,
     MemberViewSet,
     SummaryViewSet,
+    LoginView,
+    LogoutView,
+    MeView,
 )
 
 
@@ -37,5 +40,8 @@ router.register('summary', SummaryViewSet, basename='summary')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/login/', LoginView.as_view()),
+    path('api/logout/', LogoutView.as_view()),
+    path('api/me/', MeView.as_view()),
     path('api/', include(router.urls)),
 ]
