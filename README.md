@@ -1,4 +1,5 @@
-# kosh
+
+# kosh ![](https://github.com/bewakes/kosh/workflows/Kosh-App/badge.svg)
 A simple app to manage Kosh(Cooperative) operations
 
 ## Inspiration

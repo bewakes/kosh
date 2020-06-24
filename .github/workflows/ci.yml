@@ -1,0 +1,18 @@
+name: Kosh-App
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build:
+        name: Test and Deploy
+        runs-on: ubuntu-latest
+        steps:
+            - name: Test
+              run: echo "Testing..."
+
+            - name: Deploy
+              run: echo "Deploying..."
+
