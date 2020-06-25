@@ -9,13 +9,11 @@ jobs:
     build:
         name: Test and Deploy
         runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: deploy
         steps:
-            - name: Test
-              run: echo "Testing..."
-
+            - uses: actions/checkout@v1
             - name: Deploy
-              run: ./deploy.sh
+              run: ./deploy/deploy.sh
+              env:
+                  WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+                  WEBHOOK_SECRET: ${{ secrets.WEBHOOK_TOKEN }}
 
