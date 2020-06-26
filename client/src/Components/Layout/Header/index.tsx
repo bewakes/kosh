@@ -35,7 +35,6 @@ const Header: React.FC<HeaderProps> = (props) => {
             () => setNotification("Could not logout", "warning")
         );
     };
-    console.warn(userinfo);
     const displayName = (userinfo.name && userinfo.name.trim() !== '' && userinfo.name) || userinfo.username;
     return (
         <Navbar color="white" light expand="md" className="navbar">

@@ -59,7 +59,6 @@ const transactionSpecs: (member: Member, a: string) => FormSpecs = (member, type
 });
 
 const TransactionForm: React.FC<FormProps> = (props) => {
-    console.warn(props);
     const { type, onClose, member, formAction } = props;
     const { setNotification } = useNotification();
 

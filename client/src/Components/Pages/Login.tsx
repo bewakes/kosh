@@ -34,7 +34,6 @@ const Login: React.FC = (props: any) => {
             loginUrl,
             data,
             (userinfo) => {
-                console.warn('logged in!!!', userinfo);
                 localStorage.setItem("loggedIn", "true");
                 localStorage.setItem("userinfo", JSON.stringify(userinfo));
                 props.history.push("/");
