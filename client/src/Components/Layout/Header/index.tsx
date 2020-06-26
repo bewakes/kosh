@@ -42,6 +42,9 @@ const Header: React.FC<HeaderProps> = (props) => {
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto" />
                 <Nav className="mr-auto" />
+                <Nav className="mr-auto" />
+                <Nav className="mr-auto" />
+                <Nav className="mr-auto" />
                 <Nav className="mr-auto" navbar>
                     {
                     links.map(
@@ -54,7 +57,14 @@ const Header: React.FC<HeaderProps> = (props) => {
                 </Nav>
                 <NavbarText>
                     <b>{ displayName } </b>
-                        <Button size="sm" color="danger" onClick={logout}>Logout</Button>
+                        <Button
+                            size="sm"
+                            color="danger"
+                            onClick={logout}
+                            style={{padding: "0px 5px"}}
+                        >
+                            <b>logout</b>
+                        </Button>
                 </NavbarText>
             </Collapse>
         </Navbar>
