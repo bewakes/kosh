@@ -48,7 +48,7 @@ const _Members: React.FC = (props: any) => {
         <div className="page-content">
             <h2 className="row-spaced-children">Members
                 <Link to="/newMember">
-                    <Button type="button" color="success">Add New Member</Button>
+                    <Button type="button" color="success">New Member</Button>
                 </Link>
             </h2>
             <hr style={{width: '100% !important'}} />

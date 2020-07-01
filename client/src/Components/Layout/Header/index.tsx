@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                     }
                 </Nav>
                 <NavbarText>
-                    <b>{ displayName } </b>
+                    <b>{ displayName } &nbsp;</b>
                         <Button
                             size="sm"
                             color="danger"

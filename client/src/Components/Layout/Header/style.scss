@@ -1,3 +1,11 @@
+@import '../../../style.scss';
 .navbar {
-    box-shadow: 0px 0px 4px #bbb6b6;
+    background-color: $primaryColor !important;
+    color: $navbarTextColor !important;
+    a {
+        color: $navbarTextColor !important;
+    }
+    .navbar-text {
+        color: $navbarTextColor;
+    }
 }

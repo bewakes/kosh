@@ -51,7 +51,6 @@ class SummaryViewSet(viewsets.ViewSet):
 
 class LoginView(APIView):
     def post(self, request):
-        print(request.data)
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(request, username=username, password=password)
